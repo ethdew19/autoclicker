@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Windows.Threading;
 
 namespace Autoclicker
 {
@@ -23,6 +24,7 @@ namespace Autoclicker
     /// </summary>
     public partial class MainWindow : Window
     {
+        DispatcherTimer timer = new DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
@@ -59,14 +61,34 @@ namespace Autoclicker
             }
         }
 
-        private void startAutoclicker(object sender, RoutedEventArgs e)
+        private void startAutoclicker(object sender, EventArgs e)
         {
-            int number;
-            if (int.TryParse(XPositionNumberBox.Text, out number))
+            int X;
+            int Y;
+            if (int.TryParse(XPositionNumberBox.Text, out X) && int.TryParse(YPositionNumberBox.Text, out Y))
             {
-                SetCursorPos(number, 1);
+                SetCursorPos(X, Y);
                 MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
-                Console.WriteLine(number);
+                Console.WriteLine($"Mouse at position {X}x{Y}");
+            }
+        }
+
+        private void DoEveryXSeconds(object sender, RoutedEventArgs e)
+        {
+            int Seconds;
+            if (int.TryParse(SecondsBox.Text, out Seconds)) 
+            {
+                timer.Interval = TimeSpan.FromSeconds(Seconds);
+                timer.Tick += startAutoclicker;
+                timer.Start();
+            }
+        }
+        private void MainWindowKeyDown(object sender, KeyEventArgs e)
+        {
+            // Stop the timer when the 'S' key is pressed
+            if (e.Key == Key.S)
+            {
+                timer.Stop();
             }
         }
     }
