@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="AutoClicker" Height="450" Width="800">
     <Grid>
-        <RadioButton x:Name="Button" Content="Hello" Click="myButton_Click"></RadioButton>
-        <TextBox PreviewTextInput="previewNumbers" Width="120" Height="120"></TextBox>
+        <TextBox x:Name="XPositionNumberBox" PreviewTextInput="previewNumbers" Width="120" Height="120" HorizontalAlignment="Left" Margin="10"></TextBox>
+        <Button x:Name="StartButton" Content="Hello" Width="100" Height="50" Click="startAutoclicker"></Button>
     </Grid>
 </Window>

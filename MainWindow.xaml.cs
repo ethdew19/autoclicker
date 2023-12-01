@@ -58,6 +58,17 @@ namespace Autoclicker
                 e.Handled = false;
             }
         }
+
+        private void startAutoclicker(object sender, RoutedEventArgs e)
+        {
+            int number;
+            if (int.TryParse(XPositionNumberBox.Text, out number))
+            {
+                SetCursorPos(number, 1);
+                MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+                Console.WriteLine(number);
+            }
+        }
     }
     
 
