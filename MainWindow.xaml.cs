@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Autoclicker
 {
@@ -38,7 +39,6 @@ namespace Autoclicker
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
             SetCursorPos(1, 1);
-            //0x00000002
             MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
             Console.WriteLine("BUTTON CLICKED");
         }
@@ -49,6 +49,15 @@ namespace Autoclicker
         
         [DllImport("user32.dll", EntryPoint = "mouse_event", CallingConvention = CallingConvention.Winapi)]
         internal static extern void MouseEvent(MouseEventFlags dwFlags, uint dx, uint dy, uint dwData, IntPtr dwExtraInfo);
+
+        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
+        private void previewNumbers(object sender, TextCompositionEventArgs e)
+        {
+            if (!_regex.IsMatch(e.Text))
+            {
+                e.Handled = false;
+            }
+        }
     }
     
 
