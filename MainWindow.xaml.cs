@@ -28,6 +28,7 @@ namespace Autoclicker
         public MainWindow()
         {
             InitializeComponent();
+            timer.Tick += startAutoclicker;
         }
         
         [Flags]
@@ -78,9 +79,19 @@ namespace Autoclicker
             int Seconds;
             if (int.TryParse(SecondsBox.Text, out Seconds)) 
             {
-                timer.Interval = TimeSpan.FromSeconds(Seconds);
-                timer.Tick += startAutoclicker;
-                timer.Start();
+                if (StartButton.Content.ToString() == "Start")
+                {
+                    timer.Interval = TimeSpan.FromSeconds(Seconds);
+                    timer.Start();
+                    StartButton.Content = "Stop";
+                }
+                else
+                {
+                    StartButton.Content = "Start";
+                    timer.Stop();
+                    
+                }
+                
             }
         }
         private void MainWindowKeyDown(object sender, KeyEventArgs e)
@@ -89,7 +100,22 @@ namespace Autoclicker
             if (e.Key == Key.S)
             {
                 timer.Stop();
+                StartButton.Content = "Start";
             }
+        }
+
+        private void StartHyperClick(object sender, EventArgs e)
+        {
+            int clicks;
+            if (int.TryParse(AmountOfClicksBox.Text, out clicks))
+            {
+                for (int i = 0; i < clicks; i++)
+                {
+                    MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+                    Console.WriteLine($"Click{i}\n");
+                }
+            }
+            
         }
     }
     
