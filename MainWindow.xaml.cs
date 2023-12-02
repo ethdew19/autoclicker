@@ -104,19 +104,28 @@ namespace Autoclicker
             }
         }
 
-        private void StartHyperClick(object sender, EventArgs e)
+        private async void StartHyperClick(object sender, EventArgs e)
         {
             int clicks;
             if (int.TryParse(AmountOfClicksBox.Text, out clicks))
             {
-                for (int i = 0; i < clicks; i++)
-                {
-                    MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
-                    Console.WriteLine($"Click{i}\n");
-                }
+                makeMouseClickSysCalls(clicks);
             }
-            
+
         }
+
+        private async void makeMouseClickSysCalls(int clicks) 
+        {
+            for (int i = 0; i < clicks; i++)
+            {
+                MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+                MouseEvent(MouseEventFlags.LEFTUP, 0, 0, 0, IntPtr.Zero);
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+                Console.WriteLine($"Click{i}\n");
+            }
+        }
+        
+        
     }
     
 
