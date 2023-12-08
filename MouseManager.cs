@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace Autoclicker
 {
@@ -36,6 +37,9 @@ namespace Autoclicker
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
+        
+        [DllImport("user32.dll", EntryPoint = "mouse_event", CallingConvention = CallingConvention.Winapi)]
+        internal static extern void MouseEvent(MouseEventFlags dwFlags, uint dx, uint dy, uint dwData, IntPtr dwExtraInfo);
 
         public MouseManager()
         {
@@ -66,6 +70,37 @@ namespace Autoclicker
                 callback();
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
+        }
+
+        private static void UnHook()
+        {
+            UnhookWindowsHookEx(_hookID);
+        }
+        
+        [Flags]
+        public enum MouseEventFlags
+        {
+            LEFTDOWN = 0x00000002,
+            LEFTUP = 0x00000004,
+            RIGHTDOWN = 0x00000008,
+            RIGHTUP = 0x00000010
+        }
+        
+        //has 100ms of delay between clicks so it doesnt crash your computer
+        public async void clickXTimes(int clicks) 
+        {
+            for (int i = 0; i < clicks; i++)
+            {
+                MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
+                MouseEvent(MouseEventFlags.LEFTUP, 0, 0, 0, IntPtr.Zero);
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+                Console.WriteLine($"Click{i}\n");
+            }
+        }
+        
+        public void doMouseEvent(MouseEventFlags e, uint xPos=0, uint yPos=0) 
+        {
+            MouseEvent(e, xPos, yPos, 0, IntPtr.Zero);
         }
     }
 }
