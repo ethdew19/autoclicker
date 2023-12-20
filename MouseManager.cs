@@ -11,7 +11,11 @@ namespace Autoclicker
         private delegate IntPtr LowLevelMouseProc(int nCode, IntPtr wParam, IntPtr lParam);
         private static IntPtr _hookID = IntPtr.Zero;
         private LowLevelMouseProc _proc = HookCallback;
+
         public delegate void MouseCallBack();
+
+        private static bool DISABLE_INTERRUPTS = false;
+        
         public enum MouseMessages
         {
             WM_LBUTTONDOWN = 0x0201,
@@ -69,6 +73,11 @@ namespace Autoclicker
         
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
+            if (DISABLE_INTERRUPTS)
+            {
+                return CallNextHookEx(_hookID, nCode, wParam, lParam);
+            }
+            DISABLE_INTERRUPTS = true;
             if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
                 if (mouseEventActions.ContainsKey(MouseMessages.WM_LBUTTONDOWN))
@@ -77,6 +86,8 @@ namespace Autoclicker
                     callback();
                 }
             }
+
+            DISABLE_INTERRUPTS = false;
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
 
