@@ -30,12 +30,11 @@ namespace Autoclicker
         private static IntPtr _hookID = IntPtr.Zero;
         MouseManager mm = new MouseManager();
         Key clickerToggleKey;
+        private bool clickerToggleKeyPressedTracker = false;
         public MainWindow()
         {
             InitializeComponent();
             timer.Tick += clickXAndYCoordinates;
-            //_hookID = SetHook(_proc);
-            mm.AddEvent(MouseManager.MouseMessages.WM_LBUTTONDOWN, call);
         }
         
         [DllImport("user32.dll")]
@@ -64,7 +63,7 @@ namespace Autoclicker
             }
         }
 
-        private void DoEveryXSeconds(object sender, RoutedEventArgs e)
+        private void StartOrStop(object sender, RoutedEventArgs e)
         {
             int Seconds;
             if (int.TryParse(SecondsBox.Text, out Seconds)) 
@@ -74,6 +73,7 @@ namespace Autoclicker
                     timer.Interval = TimeSpan.FromSeconds(Seconds);
                     timer.Start();
                     StartButton.Content = "Stop";
+                    setClickerToggleKey(sender, e);
                 }
                 else
                 {
@@ -95,7 +95,27 @@ namespace Autoclicker
 
             if (e.Key == clickerToggleKey)
             {
-                clickerToggleKeyPressed(sender, e);
+                if (!clickerToggleKeyPressedTracker)
+                {
+                    mm.AddEvent(MouseManager.MouseMessages.WM_LBUTTONDOWN, clickXTimes);
+                }
+                else
+                {
+                    mm.RemoveEvent(MouseManager.MouseMessages.WM_LBUTTONDOWN);
+                }
+                //switching clickerToggleKeyPressedTracker to other bool
+                clickerToggleKeyPressedTracker = !clickerToggleKeyPressedTracker;
+            }
+        }
+
+        //wrapper function for MouseManger.clickXTimes
+        private void clickXTimes()
+        {
+            int clicks;
+            if (int.TryParse(AmountOfClicksBox.Text, out clicks))
+            {
+                Console.WriteLine("Wroking");
+                mm.clickXTimes(clicks);
             }
         }
 

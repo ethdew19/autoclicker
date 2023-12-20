@@ -51,6 +51,11 @@ namespace Autoclicker
         {
             mouseEventActions.Add(eventType, callBack);
         }
+
+        public void RemoveEvent(MouseMessages eventType)
+        {
+            mouseEventActions.Remove(eventType);
+        }
         
         private static IntPtr SetHook(LowLevelMouseProc proc)
         {
@@ -66,8 +71,11 @@ namespace Autoclicker
         {
             if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             {
-                MouseCallBack callback = mouseEventActions[MouseMessages.WM_LBUTTONDOWN];
-                callback();
+                if (mouseEventActions.ContainsKey(MouseMessages.WM_LBUTTONDOWN))
+                {
+                    MouseCallBack callback = mouseEventActions[MouseMessages.WM_LBUTTONDOWN];
+                    callback();
+                }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }

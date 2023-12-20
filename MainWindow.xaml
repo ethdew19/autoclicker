@@ -12,7 +12,7 @@
         <TextBox x:Name="SecondsBox" PreviewTextInput="previewNumbers" Width="35" Height="20" HorizontalAlignment="Right" Margin="10"></TextBox>
         <TextBox x:Name="AmountOfClicksBox" PreviewTextInput="previewNumbers" Width="35" Height="20" HorizontalAlignment="Right" Margin="40"></TextBox>
         <TextBox x:Name="ToggleClicksKey" PreviewTextInput="previewNumbers" Width="35" Height="20" HorizontalAlignment="Right" Margin="75"></TextBox>
-        <Button x:Name="StartButton" Content="Start" Width="100" Height="50" Click="DoEveryXSeconds"></Button>
+        <Button x:Name="StartButton" Content="Start" Width="100" Height="50" Click="StartOrStop"></Button>
         <Button x:Name="StartHyperClickButton" Content="StartHyperClick" Width="100" Height="50" VerticalAlignment="Top" Margin="10" Click="StartHyperClick"></Button>
     </Grid>
 </Window>
