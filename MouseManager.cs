@@ -106,13 +106,13 @@ namespace Autoclicker
         }
         
         //has 100ms of delay between clicks so it doesnt crash your computer
-        public async void clickXTimes(int clicks) 
+        public void clickXTimes(int clicks) 
         {
             for (int i = 0; i < clicks; i++)
             {
                 MouseEvent(MouseEventFlags.LEFTDOWN, 0, 0, 0, IntPtr.Zero);
                 MouseEvent(MouseEventFlags.LEFTUP, 0, 0, 0, IntPtr.Zero);
-                await Task.Delay(TimeSpan.FromMilliseconds(100));
+                System.Threading.Thread.Sleep(100);
                 Console.WriteLine($"Click{i}\n");
             }
         }
